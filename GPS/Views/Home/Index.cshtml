@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://js.radar.com/v4.1.18/radar.css" rel="stylesheet">
+    <script src="https://js.radar.com/v4.1.18/radar.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="map"></div>
+    
+    <script type="text/javascript">
+        debugger
+        $(document).ready(function () {
+            debugger
+            // Function to fetch and update GPS data
+            function updateMap() {
+                debugger
+                $.ajax({
+                    url: '/Home/gpslive',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        // Initialize Radar
+                        Radar.initialize('prj_test_pk_8cf791564a33b5d5fabec4d89ca576af9a4b1cec');
+
+                        // Create map
+                        const map = Radar.ui.map({
+                            container: 'map',
+                            style: 'radar-default-v1',
+                            center: [data.Devices[0].last_location.long, data.Devices[0].last_location.lat],
+                            zoom: 15
+                        });
+
+                        // Create marker
+                        const marker = Radar.ui.marker({
+                            color: '#FF0000'
+                        })
+                            .setLngLat([data.Devices[0].last_location.long, data.Devices[0].last_location.lat])
+                            .addTo(map);
+                    },
+                    error: function (error) {
+                        console.error("Failed to fetch GPS data:", error);
+                    }
+                });
+            }
+            // Call the updateMap function every 5 seconds (adjust as needed)
+            setInterval(updateMap, 5000);
+        });
+    </script>
+</body >
+</html >
